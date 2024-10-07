@@ -1,5 +1,6 @@
 # Maintainers and Authors
 
+Find the contact details for maintainers and authors of specified projects on PyPi, using Wheelodex.
 -----
 
 ## Table of Contents
