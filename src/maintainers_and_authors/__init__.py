@@ -1,3 +1,3 @@
-# SPDX-FileCopyrightText: 2024-present JamesParrott <80779630+JamesParrott@users.noreply.github.com>
+# SPDX-FileCopyrightText: 2024-present James Parrott
 #
 # SPDX-License-Identifier: MIT

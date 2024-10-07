@@ -1,19 +1,33 @@
 # Maintainers and Authors
 
-[![PyPI - Version](https://img.shields.io/pypi/v/maintainers-and-authors.svg)](https://pypi.org/project/maintainers-and-authors)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/maintainers-and-authors.svg)](https://pypi.org/project/maintainers-and-authors)
-
 -----
 
 ## Table of Contents
 
 - [Installation](#installation)
+- [Usage](#usage)
 - [License](#license)
 
 ## Installation
 
 ```console
 pip install maintainers-and-authors
+```
+
+## Usage
+
+```console
+echo rev-deps | maintainers-and-authors
+```
+
+Bash
+```console
+cat requirements.txt | maintainers-and-authors
+```
+
+Cmd.exe
+```console
+type requirements.txt | maintainers-and-authors
 ```
 
 ## License

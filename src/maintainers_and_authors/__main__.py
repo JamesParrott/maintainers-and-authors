@@ -1,9 +1,8 @@
-# SPDX-FileCopyrightText: 2024-present JamesParrott <80779630+JamesParrott@users.noreply.github.com>
+# SPDX-FileCopyrightText: 2024-present James Parrott
 #
 # SPDX-License-Identifier: MIT
 import sys
 
-if __name__ == "__main__":
-    from maintainers_and_authors.cli import maintainers_and_authors
+from maintainers_and_authors.cli import main
 
-    sys.exit(maintainers_and_authors())
+sys.exit(main())
