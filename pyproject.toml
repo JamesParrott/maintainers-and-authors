@@ -1,0 +1,66 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "maintainers-and-authors"
+dynamic = ["version"]
+description = 'Gets the author and maintainer emails for projects passed to stdin via wheelodex.'
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "JamesParrott", email = "80779630+JamesParrott@users.noreply.github.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "click",
+]
+
+[project.urls]
+Documentation = "https://github.com/JamesParrott/maintainers-and-authors#readme"
+Issues = "https://github.com/JamesParrott/maintainers-and-authors/issues"
+Source = "https://github.com/JamesParrott/maintainers-and-authors"
+
+[project.scripts]
+maintainers-and-authors = "maintainers_and_authors.cli:maintainers_and_authors"
+
+[tool.hatch.version]
+path = "src/maintainers_and_authors/__about__.py"
+
+[tool.hatch.envs.types]
+extra-dependencies = [
+  "mypy>=1.0.0",
+]
+[tool.hatch.envs.types.scripts]
+check = "mypy --install-types --non-interactive {args:src/maintainers_and_authors tests}"
+
+[tool.coverage.run]
+source_pkgs = ["maintainers_and_authors", "tests"]
+branch = true
+parallel = true
+omit = [
+  "src/maintainers_and_authors/__about__.py",
+]
+
+[tool.coverage.paths]
+maintainers_and_authors = ["src/maintainers_and_authors", "*/maintainers-and-authors/src/maintainers_and_authors"]
+tests = ["tests", "*/maintainers-and-authors/tests"]
+
+[tool.coverage.report]
+exclude_lines = [
+  "no cov",
+  "if __name__ == .__main__.:",
+  "if TYPE_CHECKING:",
+]
