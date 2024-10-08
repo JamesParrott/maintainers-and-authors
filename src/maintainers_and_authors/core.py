@@ -53,10 +53,12 @@ def _email_addresses(
         version_identifier: tuple,
         ) -> bool:
         
-        # Misses '>' highest version  below min_python_version
-        if comparison_operator in {'>',
+        
+        if comparison_operator in {'>', # Misses '>' highest released version  below min_python_version, 
+                                        # e.g. > 3.1.9999999 would work just fine with >= 3.2
+                                        # unless the patch version has exceeded 10 million.
                                    '>=',
-                                   '==',  #Could miss hard negative. Wild cards not processed.
+                                   '==',  # Could miss hard negative. Wild cards not processed.
                                    '===',
                                    '~=',  # Could miss hard negative.  
                                    } and _version_tuple_from_str(version_identifier) >= min_python_version:
@@ -96,7 +98,7 @@ def _email_addresses(
 
         # Don't str.casefold email addresses.  
         # If someone specified a ß and not an 'ss', preserve their choice.
-        author = meta_data.get('author_email','')
+        author = meta_data.get('author_email','').lower()
         maintainer = meta_data.get('maintainer_email','').lower()
 
         if author:
