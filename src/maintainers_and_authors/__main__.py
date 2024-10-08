@@ -3,6 +3,6 @@
 # SPDX-License-Identifier: MIT
 import sys
 
-from maintainers_and_authors.cli import main
+from . import cli
 
-sys.exit(main())
+sys.exit(cli.main())

@@ -5,11 +5,11 @@ from typing import Iterable, Iterator
 import requests
 
 
-def _version_tuple_from_str(s: str):
+def _version_tuple_from_str(s: str) -> tuple:
     return tuple(int(c) for c in s.split('.'))
 
 
-def _python_version_constraints(meta_data: dict[str, str]) -> Iterator[tuple[str, str]]:
+def _python_version_clauses(meta_data: dict[str, str]) -> Iterator[tuple[str, str]]:
     
     if 'requires_python' in meta_data:
 
@@ -44,7 +44,7 @@ def _python_version_classifiers(meta_data: dict[str, str]) -> Iterator[str]:
 def _email_addresses(
     project_names: Iterable[str],
     min_python_version: tuple = (),
-    ) -> dict[str, set[str]]:
+    ) -> dict[str, dict[str, dict]]:
 
 
 
@@ -69,8 +69,7 @@ def _email_addresses(
 
         return False
 
-    # Use a set in case author and maintainer fields are both set for the same project
-    projects = collections.defaultdict(set)
+    projects = collections.defaultdict(dict)
 
     # print('Processing projects: ', end='')
 
@@ -85,14 +84,21 @@ def _email_addresses(
 
         meta_data = response.json()['data']['dist_info']['metadata']
 
+        clauses = list(_python_version_clauses(meta_data))
+
         if any(excludes_unsupported_versions(comparison_operator, version_identifier)
-               for comparison_operator, version_identifier in _python_version_constraints(meta_data)):
+               for comparison_operator, version_identifier in clauses):
             continue
 
         classifiers = list(_python_version_classifiers(meta_data))
 
-        if classifiers and not any(_version_tuple_from_str(version_identifier) < min_python_version
-                                   for version_identifier in classifiers):
+        classifiers_older_than_min_supported = [
+            classifier
+            for classifier in 
+            if _version_tuple_from_str(classifier) < min_python_version
+        ]
+
+        if classifiers and classifiers_older_than_min_supported:
             continue
 
 
@@ -101,10 +107,18 @@ def _email_addresses(
         author = meta_data.get('author_email','').lower()
         maintainer = meta_data.get('maintainer_email','').lower()
 
+        if author or maintainer:
+            project_data = dict(
+                meta_data = meta_data,
+                clauses = clauses,
+                classifiers = classifiers,
+                classifiers_older_than_min_supported = classifiers_older_than_min_supported,
+                )
+
         if author:
-            projects[author].add(project_name)
+            projects[author][project_name] = project_data
         if maintainer:
-            projects[maintainer].add(project_name)
+            projects[maintainer][project_name] = project_data
 
 
     return projects
