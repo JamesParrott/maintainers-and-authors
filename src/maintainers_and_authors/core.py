@@ -1,4 +1,5 @@
 import collections
+import email.utils
 import sys
 from typing import Iterable, Iterator
 
@@ -39,14 +40,27 @@ def _python_version_classifiers(meta_data: dict[str, str]) -> Iterator[str]:
             yield entry.removeprefix('Programming Language :: Python ::').partition('::')[0].strip()
 
 
+def _parse_mail_boxes(mail_boxes: str) -> Iterator[tuple[str, str]]:
+    while mail_boxes:
+        name, email = email.utils.parseaddr(mail_boxes)
+
+        if (name, email) == ('', ''):
+            break
+
+        yield name, email
+
+        mail_boxes = (mail_boxes.partition(f'<{email}>')[2]
+                                .lstrip()
+                                .removeprefix(',')
+        )
+
+
 
 
 def _email_addresses(
     project_names: Iterable[str],
     min_python_version: tuple = (),
     ) -> dict[str, dict[str, dict]]:
-
-
 
     def excludes_unsupported_versions(
         comparison_operator: str,
@@ -102,26 +116,25 @@ def _email_addresses(
             continue
 
 
-        # Don't str.casefold email addresses.  
-        # If someone specified a ß and not an 'ss', preserve their choice.
-        #
         # Use logical "or" instead of a default in .get, e.g. .get(key, '') 
         # as it is possible that meta_data['author_email'] is None.
-        author = (meta_data.get('author_email') or '').lower()
-        maintainer = (meta_data.get('maintainer_email') or '').lower()
+        authors = list(_parse_mail_boxes(meta_data.get('author_email') or ''))
+        maintainers = list(_parse_mail_boxes(meta_data.get('maintainer_email') or ''))
 
-        if author or maintainer:
+        if authors or maintainers:
             project_data = dict(
                 meta_data = meta_data,
                 clauses = clauses,
                 classifiers = classifiers,
                 classifiers_older_than_min_supported = classifiers_older_than_min_supported,
                 )
-
-        if author:
-            projects[author][project_name] = project_data
-        if maintainer:
-            projects[maintainer][project_name] = project_data
+        for name, email in authors + maintainers:
+            project_data['auth_maint_contact_name'] = name
+            
+            # Don't str.casefold email addresses.  
+            # If someone specified a ß and not an 'ss', preserve their choice.
+            #
+            projects[email.lower()][project_name] = project_data.copy()
 
 
     return projects

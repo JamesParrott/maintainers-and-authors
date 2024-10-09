@@ -2,6 +2,7 @@ import sys
 
 from . import core
 
+
 def version_tuple_from_str(s: str) -> tuple:
     return core._version_tuple_from_str(s)
 
