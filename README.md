@@ -18,17 +18,17 @@ pip install maintainers-and-authors
 ## Usage
 
 ```console
-echo rev-deps | maintainers-and-authors
+echo rev-deps | maintainers-and-authors 3.9
 ```
 
 Bash
 ```console
-cat requirements.txt | maintainers-and-authors
+cat requirements.txt | maintainers-and-authors 3.9
 ```
 
 Cmd.exe
 ```console
-type requirements.txt | maintainers-and-authors
+type requirements.txt | maintainers-and-authors 3.9
 ```
 
 ## License

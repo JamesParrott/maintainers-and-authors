@@ -94,7 +94,7 @@ def _email_addresses(
 
         classifiers_older_than_min_supported = [
             classifier
-            for classifier in 
+            for classifier in classifiers
             if _version_tuple_from_str(classifier) < min_python_version
         ]
 
@@ -104,8 +104,11 @@ def _email_addresses(
 
         # Don't str.casefold email addresses.  
         # If someone specified a ß and not an 'ss', preserve their choice.
-        author = meta_data.get('author_email','').lower()
-        maintainer = meta_data.get('maintainer_email','').lower()
+        #
+        # Use logical "or" instead of a default in .get, e.g. .get(key, '') 
+        # as it is possible that meta_data['author_email'] is None.
+        author = (meta_data.get('author_email') or '').lower()
+        maintainer = (meta_data.get('maintainer_email') or '').lower()
 
         if author or maintainer:
             project_data = dict(
