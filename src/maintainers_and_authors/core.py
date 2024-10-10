@@ -1,5 +1,6 @@
 import collections
 import email.utils
+import itertools
 import sys
 from typing import Iterable, Iterator
 
@@ -118,23 +119,32 @@ def _email_addresses(
 
         # Use logical "or" instead of a default in .get, e.g. .get(key, '') 
         # as it is possible that meta_data['author_email'] is None.
-        authors = list(_parse_mail_boxes(meta_data.get('author_email') or ''))
-        maintainers = list(_parse_mail_boxes(meta_data.get('maintainer_email') or ''))
 
-        if authors or maintainers:
+
+        names, emails = [], []
+        for name, email in itertools.chain(
+                    _parse_mail_boxes(meta_data.get('maintainer_email') or ''),
+                    _parse_mail_boxes(meta_data.get('author_email') or ''),
+                    ):
+            names.append(name)
+            emails.append(email)
+
+        if names and emails:
             project_data = dict(
                 meta_data = meta_data,
                 clauses = clauses,
                 classifiers = classifiers,
                 classifiers_older_than_min_supported = classifiers_older_than_min_supported,
                 )
-        for name, email in authors + maintainers:
-            project_data['auth_maint_contact_name'] = name
+                
+        for name, email in zip(names, emails):
+            project_data['auth_maint_contact_names'] = names
             
             # Don't str.casefold email addresses.  
             # If someone specified a ß and not an 'ss', preserve their choice.
             #
-            projects[email.lower()][project_name] = project_data.copy()
+            projects[frozenset(emails)][project_name] = project_data.copy()
+
 
 
     return projects
