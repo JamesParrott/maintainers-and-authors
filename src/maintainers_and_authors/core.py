@@ -113,7 +113,7 @@ def _email_addresses(
             if _version_tuple_from_str(classifier) < min_python_version
         ]
 
-        if classifiers and classifiers_older_than_min_supported:
+        if classifiers and not classifiers_older_than_min_supported:
             continue
 
 
@@ -135,7 +135,8 @@ def _email_addresses(
                 clauses = clauses,
                 classifiers = classifiers,
                 classifiers_older_than_min_supported = classifiers_older_than_min_supported,
-                auth_maint_contact_names = names,
+                # duplicate emails in the key, to preserve ordering for correspondence with names
+                maintainers_and_authors = (emails, names),
             )
             
             projects[frozenset(emails)][project_name] = project_data
