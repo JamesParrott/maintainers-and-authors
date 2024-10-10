@@ -43,14 +43,14 @@ def _python_version_classifiers(meta_data: dict[str, str]) -> Iterator[str]:
 
 def _parse_mail_boxes(mail_boxes: str) -> Iterator[tuple[str, str]]:
     while mail_boxes:
-        name, email = email.utils.parseaddr(mail_boxes)
+        name, email_ = email.utils.parseaddr(mail_boxes)
 
-        if (name, email) == ('', ''):
+        if (name, email_) == ('', ''):
             break
 
-        yield name, email
+        yield name, email_
 
-        mail_boxes = (mail_boxes.partition(f'<{email}>')[2]
+        mail_boxes = (mail_boxes.partition(f'<{email_}>')[2]
                                 .lstrip()
                                 .removeprefix(',')
         )
@@ -122,12 +122,12 @@ def _email_addresses(
 
 
         names, emails = [], []
-        for name, email in itertools.chain(
+        for name, email_ in itertools.chain(
                     _parse_mail_boxes(meta_data.get('maintainer_email') or ''),
                     _parse_mail_boxes(meta_data.get('author_email') or ''),
                     ):
             names.append(name)
-            emails.append(email)
+            emails.append(email_)
 
         if names and emails:
             project_data = dict(
@@ -135,15 +135,10 @@ def _email_addresses(
                 clauses = clauses,
                 classifiers = classifiers,
                 classifiers_older_than_min_supported = classifiers_older_than_min_supported,
-                )
-                
-        for name, email in zip(names, emails):
-            project_data['auth_maint_contact_names'] = names
+                auth_maint_contact_names = names,
+            )
             
-            # Don't str.casefold email addresses.  
-            # If someone specified a ß and not an 'ss', preserve their choice.
-            #
-            projects[frozenset(emails)][project_name] = project_data.copy()
+            projects[frozenset(emails)][project_name] = project_data
 
 
 
