@@ -18,6 +18,9 @@ def _parse_mail_boxes(mail_boxes: str) -> Iterator[tuple[str, str]]:
         if (name, email_) == ('', ''):
             break
 
+        if email_.endswith('.noreply.github.com'):
+            continue
+
         yield name, email_
 
         mail_boxes = (mail_boxes.partition(f'<{email_}>')[2]
