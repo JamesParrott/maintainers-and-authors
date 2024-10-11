@@ -5,6 +5,7 @@ import sys
 from typing import Iterable, Iterator
 
 import requests
+from tqdm import tqdm
 
 
 def _version_tuple_from_str(s: str) -> tuple:
@@ -42,7 +43,7 @@ def _email_addresses(
 
     # print('Processing projects: ', end='')
 
-    for project_name in project_names:
+    for project_name in tqdm(project_names):
 
         project_name = project_name.rstrip()
 
