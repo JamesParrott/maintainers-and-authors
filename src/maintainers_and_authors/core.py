@@ -43,9 +43,13 @@ def _email_addresses(
 
     # print('Processing projects: ', end='')
 
-    for project_name in tqdm(project_names):
+    tqdm_wrapped_project_names = tqdm(project_names)
+
+    for project_name in tqdm_wrapped_project_names:
 
         project_name = project_name.rstrip()
+
+        tqdm_wrapped_project_names.write(f'Processing: {project_name}')
 
         # print(f'{project_name}, ', end='', flush=True)
         response = requests.get(f'https://www.wheelodex.org/json/projects/{project_name}/data')
