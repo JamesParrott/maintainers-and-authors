@@ -41,13 +41,12 @@ def _parse_mail_boxes(mail_boxes: str) -> Iterator[tuple[str, str]]:
 def _email_addresses(
     project_names: Iterable[str],
     min_python_version: tuple = (),
-    ) -> dict[str, dict[str, dict]]:
+    ) -> dict[frozenset[str], dict[str, dict]]:
 
 
 
     projects = collections.defaultdict(dict)
 
-    # print('Processing projects: ', end='')
 
     for project_name in project_names:
 
@@ -59,7 +58,6 @@ def _email_addresses(
         url = f'https://www.pypi.org/pypi/{project_name}/json'
 
 
-        print(f'{url=}, ', flush=True)
         # response = requests.get(f'https://www.wheelodex.org/json/projects/{project_name}/data')
         response = requests.get(url)
 
@@ -76,7 +74,6 @@ def _email_addresses(
                     _parse_mail_boxes(meta_data.get('maintainer_email') or ''),
                     _parse_mail_boxes(meta_data.get('author_email') or ''),
                     ):
-            print(f'{name=}, {email_=}')
             names.append(name)
             emails.append(email_)
 
