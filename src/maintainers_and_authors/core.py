@@ -14,7 +14,15 @@ def _version_tuple_from_str(s: str) -> tuple:
 def _parse_mail_boxes(mail_boxes: str) -> Iterator[tuple[str, str]]:
     while mail_boxes:
         
-        name, email_ = email.utils.parseaddr(mail_boxes, strict=False)
+        # CVE-2023-27043 was found in email.utils.parseaddr, which
+        # was fixed by making a breaking change to the old insecure behaviour
+        # in multiple patch versions of Python 3.9, ..., 3.13, 
+        # that would be laborious and ugly to enumerate.
+        try:
+            name, email_ = email.utils.parseaddr(mail_boxes, strict=False)
+        except TypeError:
+            name, email_ = email.utils.parseaddr(mail_boxes)
+
 
         if (name, email_) == ('', ''):
             break
