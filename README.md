@@ -1,6 +1,6 @@
 # Maintainers and Authors
 
-Find the contact details for maintainers and authors of specified projects on PyPi, using PyPi's JSON API..
+Find the contact details for maintainers and authors of specified projects on PyPi, using PyPi's JSON API.
 -----
 
 ## Table of Contents
@@ -12,10 +12,12 @@ Find the contact details for maintainers and authors of specified projects on Py
 ## Installation
 
 ```console
-pip install maintainers-and-authors
+uv tool install maintainers-and-authors
 ```
 
 ## Usage
+
+Project names are intentionally read from stdin.
 
 ```console
 echo rev-deps | maintainers-and-authors

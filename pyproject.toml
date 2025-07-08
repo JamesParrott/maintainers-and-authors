@@ -21,7 +21,6 @@ classifiers = [
 ]
 dependencies = [
   "requests",
-  "rev-deps",
 ]
 
 [project.urls]
